@@ -532,17 +532,17 @@ public class AccionControlUI {
 
 		// Si es una acción, algunos campos se asignan en un orden diferente
 		if (esAccion) {
-			fechaGradeo = camposComic.get(2);
-			artistaComic = camposComic.get(3);
-			varianteComic = camposComic.get(4);
-			guionistaComic = camposComic.get(5);
-			urlReferenciaComic = camposComic.get(6);
-			direccionImagenComic = camposComic.get(7);
-			keyComentarios = camposComic.get(8);
-			firmaComic = camposComic.get(9);
-			editorComic = camposComic.get(10);
-			codigoComic = camposComic.get(11);
-			precioComic = camposComic.get(12);
+			fechaGradeo = camposComic.get(2); //2
+			artistaComic = camposComic.get(3); //3
+			varianteComic = camposComic.get(4); //4
+			guionistaComic = camposComic.get(5); //5
+			urlReferenciaComic = camposComic.get(6); //6
+			direccionImagenComic = camposComic.get(7); //7
+			keyComentarios = camposComic.get(8); //8
+			editorComic = camposComic.get(9); //9
+			codigoComic = camposComic.get(10); //9
+			precioComic = camposComic.get(11); //11
+			firmaComic = camposComic.get(12); //12
 			idComicTratar = camposComic.get(13);
 		}
 
@@ -562,6 +562,8 @@ public class AccionControlUI {
 		comicTemp.setUrlReferenciaComic(Utilidades.defaultIfNullOrEmpty(urlReferenciaComic, ""));
 		comicTemp.setIdComic(Utilidades.defaultIfNullOrEmpty(idComicTratar, ""));
 
+		System.out.println(comicTemp.toString());
+		
 		return comicTemp;
 	}
 

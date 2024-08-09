@@ -575,6 +575,10 @@ public class AccionFuncionesComunes {
 					getReferenciaVentana().getProntInfoTextArea());
 		}
 
+		if (comic == null) {
+			return new ArrayList<>();
+		}
+
 		String keyString = comic.getKeyComentarios().replace(";", "");
 		comic.setKeyComentarios(keyString);
 		comicInfo.add(comic);

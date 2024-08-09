@@ -140,7 +140,7 @@ public class WebScraperPaniniComics {
 
 	public static String referenciaUrl(String codigoBusqueda) {
 		String url = "";
-		if (codigoBusqueda.indexOf("www.panini.es") != -1) {
+		if (codigoBusqueda.contains("panini.es")) {
 			url = codigoBusqueda;
 		} else {
 			url = buscarEnGoogle(codigoBusqueda);
@@ -160,6 +160,7 @@ public class WebScraperPaniniComics {
 
 		try {
 			String urlReferencia = referenciaUrl(diamondCode);
+			System.out.println(urlReferencia);
 			int codigoRespuesta = verificarCodigoRespuesta(urlReferencia);
 
 			if (codigoRespuesta == 404) {

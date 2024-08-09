@@ -88,6 +88,8 @@ public class ScrapeoTipoArtistaComicVine {
 					if (urlReferencia != null) {
 						Document document = Jsoup.connect(urlReferencia).get();
 						String descripcion = scrapeTitle(document);
+						
+						
 						resultados = tipoArtista(descripcion, nombre);
 					}
 				} catch (IOException e) {
@@ -126,7 +128,7 @@ public class ScrapeoTipoArtistaComicVine {
 			String titleContent = titleElement.text().trim();
 			return titleContent;
 		}
-		return null;
+		return "";
 	}
 
 	private static String[] tipoArtista(String descripcion, String nombrePersona) {

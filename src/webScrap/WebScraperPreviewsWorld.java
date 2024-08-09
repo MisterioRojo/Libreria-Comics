@@ -41,6 +41,11 @@ public class WebScraperPreviewsWorld {
 
 	public static int verificarCodigoRespuesta(String urlString) throws IOException, URISyntaxException {
 		try {
+			
+			if(urlString == null) {
+				return 404;
+			}
+			
 			// Desactivar la validación del certificado SSL/TLS
 			TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 				public java.security.cert.X509Certificate[] getAcceptedIssuers() {
@@ -80,51 +85,59 @@ public class WebScraperPreviewsWorld {
 	}
 
 	public static String buscarEnGoogle(String searchTerm) {
-		searchTerm = agregarMasAMayusculas(searchTerm);
-		searchTerm = searchTerm.replace("(", "%28").replace(")", "%29").replace("#", "%23");
+        searchTerm = agregarMasAMayusculas(searchTerm);
+        searchTerm = searchTerm.replace("(", "%28").replace(")", "%29").replace("#", "%23");
 
-		try {
-			String encodedSearchTerm = URLEncoder.encode(searchTerm, "UTF-8");
-			String urlString = "https://www.google.com/search?q=" + encodedSearchTerm + "+previews+world";
-			URI uri = new URI(urlString);
-			URL url = uri.toURL();
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
-			con.setRequestProperty("User-Agent",
-					"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36");
+        try {
+            String encodedSearchTerm = URLEncoder.encode(searchTerm, "UTF-8");
+            String urlString = "https://www.google.com/search?q=" + encodedSearchTerm + "+previews+world";
+            URI uri = new URI(urlString);
+            URL url = uri.toURL();
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("User-Agent",
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.99 Safari/537.36");
 
-			int responseCode = con.getResponseCode();
-			if (responseCode == 429) {
-				// Manejar el error de demasiadas solicitudes
-				System.out.println("Demasiadas solicitudes. Esperando y reintentando...");
-				Thread.sleep(5000); // Esperar 5 segundos antes de reintentar
-				return buscarEnGoogle(searchTerm); // Reintentar la búsqueda
-			}
+            int responseCode = con.getResponseCode();
+            if (responseCode == 429) {
+                // Manejar el error de demasiadas solicitudes
+                System.out.println("Demasiadas solicitudes. Esperando y reintentando...");
+                Thread.sleep(5000); // Esperar 5 segundos antes de reintentar
+                return buscarEnGoogle(searchTerm); // Reintentar la búsqueda
+            }
 
-			BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-			String inputLine;
-			StringBuilder content = new StringBuilder();
-			while ((inputLine = in.readLine()) != null) {
-				content.append(inputLine);
-			}
-			in.close();
-			con.disconnect();
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder content = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                content.append(inputLine);
+            }
+            in.close();
+            con.disconnect();
 
-			String html = content.toString();
-			int startIndex = html.indexOf("https://www.previewsworld.com/");
-			if (startIndex != -1) {
-				int endIndex = html.indexOf("\"", startIndex);
-				String[] urls = html.substring(startIndex, endIndex).split("\"");
-				String googleUrl = "https://www.previewsworld.com/";
-				return encontrarURLRelevante(urls, searchTerm, googleUrl);
-			} else {
-				return null;
-			}
-		} catch (IOException | InterruptedException | URISyntaxException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+            String html = content.toString();
+
+            // Buscar la URL de Previews World
+            int startIndex = html.indexOf("https://www.previewsworld.com/");
+            if (startIndex != -1) {
+                int endIndex = html.indexOf("\"", startIndex);
+                String urlCandidate = html.substring(startIndex, endIndex);
+
+                // Verificar si la URL contiene el patrón [A-Z]{3}\d{6}
+                Pattern pattern = Pattern.compile("[A-Z]{3}\\d{6}");
+                Matcher matcher = pattern.matcher(urlCandidate);
+
+                if (matcher.find()) {
+                    return urlCandidate; // Devolver la URL si contiene el patrón
+                }
+            }
+
+            return null; // Devolver null si no se encontró una URL con el patrón
+        } catch (IOException | InterruptedException | URISyntaxException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
 	public static String encontrarURLRelevante(String[] urls, String searchTerm, String googleUrl) {
 		String urlElegida = null;
@@ -142,7 +155,7 @@ public class WebScraperPreviewsWorld {
 	public static String referenciaUrl(String codigoBusqueda) {
 		String url = "";
 
-		if (codigoBusqueda.contains("www.previewsworld.com/Catalog/")) {
+		if (codigoBusqueda.contains("previewsworld.com/Catalog/")) {
 			codigoBusqueda = Utilidades.extractCodeFromUrl(codigoBusqueda);
 			if (codigoBusqueda.matches("[A-Z]{3}\\d{6}")) {
 				url = "https://www.previewsworld.com/Catalog/" + codigoBusqueda;
@@ -169,8 +182,9 @@ public class WebScraperPreviewsWorld {
 	public static Comic displayComicInfo(String diamondCode, TextArea prontInfo) {
 
 		try {
+						
 			String urlReferencia = referenciaUrl(diamondCode);
-
+			
 			int codigoRespuesta = verificarCodigoRespuesta(urlReferencia);
 
 			if (codigoRespuesta == 404) {
@@ -179,6 +193,7 @@ public class WebScraperPreviewsWorld {
 
 				return null;
 			}
+			
 			Document document = Jsoup.connect(urlReferencia).get();
 
 			String titulo = scrapeTitle(document);

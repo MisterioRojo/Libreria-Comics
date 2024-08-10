@@ -460,6 +460,8 @@ public class AccionFuncionesComunes {
 		getReferenciaVentana().getDireccionImagenTextField().setText("");
 		getReferenciaVentana().getUrlReferenciaTextField().setText("");
 		getReferenciaVentana().getNumeroComicTextField().setText("");
+		getReferenciaVentana().getFirmaComicTextField().setText("");
+		getReferenciaVentana().getPrecioComicTextField().setText("");
 
 		// Limpiar el TextArea
 		getReferenciaVentana().getKeyComicData().setText(""); // Asegúrate de tener el método get para el TextArea

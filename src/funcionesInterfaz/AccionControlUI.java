@@ -562,7 +562,7 @@ public class AccionControlUI {
 		comicTemp.setUrlReferenciaComic(Utilidades.defaultIfNullOrEmpty(urlReferenciaComic, ""));
 		comicTemp.setIdComic(Utilidades.defaultIfNullOrEmpty(idComicTratar, ""));
 
-		System.out.println(comicTemp.toString());
+		
 		
 		return comicTemp;
 	}
@@ -645,6 +645,9 @@ public class AccionControlUI {
 		comicTempModificado
 				.setEditorComic(Utilidades.defaultIfNullOrEmpty(datos.getEditorComic(), comicTemp.getEditorComic()));
 
+		comicTempModificado.setFirmaComic(
+				Utilidades.defaultIfNullOrEmpty(datos.getFirmaComic(), comicTemp.getFirmaComic()));
+		
 		comicTempModificado.setKeyComentarios(
 				Utilidades.defaultIfNullOrEmpty(datos.getKeyComentarios(), comicTemp.getKeyComentarios()));
 		comicTempModificado
